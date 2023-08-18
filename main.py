@@ -1,7 +1,5 @@
 import os
-import random
 from pathlib import Path
-
 import genanki
 import json
 
