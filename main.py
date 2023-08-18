@@ -55,12 +55,13 @@ for deck_name in decks.keys():
         else:
             image = Path(question['image']).name
             image = f'<img src="{image}">'
-        question_text = question['question'] + "<br>"
+        question_text = question['question'] + "<br> <ol>"
         correct_answer = ""
         for index, answer in enumerate(question["answers"]):
-            question_text += f"{index}) {answer['answer_text']} <br>"
+            question_text += f"<li> {answer['answer_text']} </li>"
             if answer["is_correct"]:
                 correct_answer = answer["answer_text"]
+        question_text += "</ol>"
         answer_text = f"{question['correct_answer']} - {correct_answer} <br> {question['answer_tip']}"
         my_note = genanki.Note(
             model=my_model,
