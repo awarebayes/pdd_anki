@@ -2,11 +2,27 @@ import os
 from pathlib import Path
 import genanki
 import json
+import urllib.request
+import zipfile
 
 base_id = 104465
 
-A_B_images_path = "pdd_json/images/A_B"
-C_D_images_path = "pdd_json/images/C_D"
+# Заменить на актуальный url отсюда https://github.com/etspring/pdd_russia/releases
+questions_url = "https://github.com/etspring/pdd_russia/archive/refs/tags/v2024.Q3.0.zip"
+
+# Скачивание файла с билетами и его распаковка
+
+file_name, _ = urllib.request.urlretrieve(questions_url)
+extracted_folder = file_name + "_extracted\\"
+print(file_name)
+with zipfile.ZipFile(file_name, 'r') as zip_ref:
+    zip_ref.extractall(extracted_folder)
+
+# Абсолютный путь до папки где содержатся распакованные билеты и картинки в папках /images и /questions
+extracted_folder = extracted_folder + os.listdir(extracted_folder)[0]
+
+A_B_images_path =  extracted_folder + "/images/A_B"
+C_D_images_path = extracted_folder + "/images/C_D"
 
 images_ab = [os.path.join(A_B_images_path,  i) for i in os.listdir(A_B_images_path)]
 images_cd = [os.path.join(C_D_images_path,  i) for i in os.listdir(C_D_images_path)]
@@ -15,7 +31,7 @@ images = images_ab + images_cd
 deck_names = []
 deck_dirs = ["A_B/tickets", "A_B/topics", "C_D/tickets", "C_D/topics"]
 for i in deck_dirs:
-    for billet in os.listdir("pdd_json/questions/" + i):
+    for billet in os.listdir(extracted_folder + "/questions/" + i):
         deck_names.append(i+"/"+billet.replace(".json", ""))
 
 decks = {
@@ -43,7 +59,7 @@ my_model = genanki.Model(
   ])
 
 
-questions_dir = Path("pdd_json/questions")
+questions_dir = Path(extracted_folder + "/questions")
 
 notes = []
 for deck_name in decks.keys():
