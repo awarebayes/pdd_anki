@@ -48,7 +48,7 @@ questions_dir = Path("pdd_json/questions")
 notes = []
 for deck_name in decks.keys():
     deck_items_path = questions_dir / (deck_name + ".json")
-    deck_item_json = json.load(open(deck_items_path))
+    deck_item_json = json.load(open(deck_items_path, encoding="utf8"))
     for question in deck_item_json:
         if "no_image" in question['image']:
             image = ""
